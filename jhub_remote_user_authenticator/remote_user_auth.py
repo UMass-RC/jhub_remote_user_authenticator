@@ -12,7 +12,8 @@ class RemoteUserLoginHandler(BaseHandler):
 
     def get(self):
         header_name = self.authenticator.header_name
-        remote_user = self.request.headers.get(header_name, "")
+        remote_user = self.formatString(self.request.headers.get(header_name, ""))  # This will modify the input header
+        
         if remote_user == "":
             raise web.HTTPError(401)
 
@@ -20,6 +21,14 @@ class RemoteUserLoginHandler(BaseHandler):
         self.set_login_cookie(user)
         next_url = self.get_next_url(user)
         self.redirect(next_url)
+        
+    def formatString(self, inputString):
+        """
+        This is the only method that should ever be modified, this will control what the authenticator does with REMOTE_USER
+        """
+        parts = inputString.split("@")
+        parts[1] = parts[1].replace(".", "_")
+        return parts[0] + "_" + parts[1]
 
 
 class RemoteUserAuthenticator(Authenticator):
