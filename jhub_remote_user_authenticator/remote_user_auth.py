@@ -57,7 +57,7 @@ class RemoteUserLocalAuthenticator(LocalAuthenticator):
     local accounts through the admin interface.
     """
     header_name = Unicode(
-        default_value='REMOTE_USER',
+        default_value='X-Remote-User',
         config=True,
         help="""HTTP header to inspect for the authenticated username.""")
 
